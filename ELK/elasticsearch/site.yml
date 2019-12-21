@@ -1,0 +1,65 @@
+---
+- hosts: elk_vm
+  become: true
+  vars:
+    es_version: 6.x
+    es_data_path: /data/elasticsearch/data
+    es_logs_path: /data/elasticsearch/log
+    es_config_source_path: es-configs/elasticsearch.yml
+    es_config_dest_path: /etc/elasticsearch/elasticsearch.yml
+    es_cluster_name: demo
+  tasks:
+    - name: install default-jre
+      apt:
+        force_apt_get: 'yes'
+        update_cache: 'yes'
+        name: default-jre
+        state: present
+    - name: install default-jre
+      apt:
+        force_apt_get: 'yes'
+        update_cache: 'yes'
+        name: default-jdk
+        state: present
+    - name: add es apt-key
+      apt_key:
+        state: present
+        url: 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
+    - name: install apt-transport-https
+      apt:
+        name: apt-transport-https
+        force_apt_get: 'yes'
+        state: latest
+    - name: add artifacts details in sorces.list.d
+      lineinfile:
+        state: present
+        path: '/etc/apt/sources.list.d/elastic-{{es_version}}.list'
+        line: 'deb https://artifacts.elastic.co/packages/{{es_version}}/apt stable main'
+        create: 'yes'
+    - name: install elasticsearch service
+      apt:
+        force_apt_get: 'yes'
+        update_cache: 'yes'
+        name: elasticsearch
+        state: present
+    - name: copy elasticsearch configuration file
+      template:
+        dest: '{{ es_config_dest_path }}'
+        src: '{{ es_config_source_path }}'
+        force: 'yes'
+        backup: 'yes'
+    - name: create es data dir and chown to elasticsearch user
+      file:
+        path: '{{ item }}'
+        recurse: 'yes'
+        state: directory
+        owner: elasticsearch
+      with_items:
+        - '{{ es_data_path }}'
+        - '{{ es_logs_path }}'
+    - name: enable and start elasticsearch service
+      systemd:
+        daemon_reload: 'yes'
+        state: started
+        name: elasticsearch.service
+        enabled: yes
