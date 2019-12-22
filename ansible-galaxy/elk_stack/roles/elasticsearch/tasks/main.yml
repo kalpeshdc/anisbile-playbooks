@@ -26,3 +26,9 @@
     state: started
     name: elasticsearch.service
     enabled: 'yes'
+- name: get elasticserach output
+  uri:
+    url: 'http://localhost:9200'
+    method: GET
+    timeout: 30
+    status_code: 200
