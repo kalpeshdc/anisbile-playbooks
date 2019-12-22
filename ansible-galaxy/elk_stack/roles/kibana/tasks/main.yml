@@ -1,5 +1,27 @@
 ---
-- name: echo module
-  debug:
-    msg: 'Checking variable value {{ es_version }}'
-    # var: es_version
+- name: install kibana service
+  apt:
+    force_apt_get: 'yes'
+    update_cache: 'yes'
+    name: kibana
+    state: present
+- name: copy kibana configuration file
+  template:
+    dest: '{{ kibana_config_dest_path }}'
+    src: '{{ kibana_config_source_path }}'
+    force: 'yes'
+    backup: 'yes'
+- name: enable and start kibana service
+  systemd:
+    daemon_reload: 'yes'
+    state: started
+    name: kibana.service
+    enabled: 'yes'
+- name: check kibana health
+  uri:
+    url: 'http://{{ kibana_server_host }}:{{ kibana_server_port }}'
+    method: GET
+    timeout: 30
+    status_code:
+      - 200
+      - 503

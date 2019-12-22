@@ -1,2 +1,19 @@
 ---
-# tasks file for logstash
+- name: install logstash service
+  apt:
+    force_apt_get: 'yes'
+    update_cache: 'yes'
+    name: logstash
+    state: present
+- name: copy logstash pipeline configuration
+  template:
+    dest: '{{ logstash_pipeline_config_dest_path }}'
+    src: '{{ logstash_pipeline_config_source_path }}'
+    force: 'yes'
+    backup: 'yes'
+- name: enable and start logstash service
+  systemd:
+    daemon_reload: 'yes'
+    state: started
+    name: logstash.service
+    enabled: 'yes'

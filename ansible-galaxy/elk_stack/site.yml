@@ -1,8 +1,9 @@
 ---
 - name: test variable
   hosts: elk_vm
-  become: yes
-
+  become: 'yes'
   roles:
-  - common
-  - elasticsearch
+    # - common
+    # - elasticsearch
+    # - kibana
+    - logstash

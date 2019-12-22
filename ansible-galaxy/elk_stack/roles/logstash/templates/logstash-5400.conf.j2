@@ -1,0 +1,12 @@
+input {
+    tcp {
+        port => 5000
+        codec => json
+    }
+}
+output {
+    elasticsearch {
+        hosts => ["{{ elasticsearch_server }}"] 
+        index => "{{ logstash_index_pattern }}"
+    }
+}

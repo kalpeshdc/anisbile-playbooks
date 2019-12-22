@@ -1,1 +1,6 @@
 ---
+kibana_config_dest_path: /etc/kibana/kibana.yml
+kibana_config_source_path: kibana.yml.j2
+kibana_server_name: sre-demo
+kibana_server_port: 5601
+kibana_server_host: 0.0.0.0
