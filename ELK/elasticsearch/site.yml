@@ -1,5 +1,6 @@
 ---
-- hosts: elk_vm
+- name: install and start elasticsearch service
+  hosts: elk_vm
   become: true
   vars:
     es_version: 6.x
