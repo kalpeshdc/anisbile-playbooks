@@ -1,22 +1,30 @@
-Role Name
+Logstash
 =========
 
-A brief description of the role goes here.
+Use this role to install logstash on the ubuntu VM using ansible-playbook. Please check templates/logstash-5400.conf.j2 file for logstash pipeline configuration.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ubuntu 16+
+- ansible 2.x
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Global Variable (group_vars/all):
+- **es_version**: 6.x
+
+Role Vars (/vars/main.yml):
+- **logstash_pipeline_config_dest_path**: /etc/logstash/conf.d/logstash-5400.conf
+- **logstash_pipeline_config_source_path**: logstash-5400.conf.j2
+- **logstash_index_pattern**: demo-%{indexName}
+- **elasticsearch_server**: localhost:9200
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Make sure common role is executed before executing this role.
 
 Example Playbook
 ----------------
@@ -25,14 +33,10 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+        - common
+        - logstash
 
 License
 -------
 
 BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).

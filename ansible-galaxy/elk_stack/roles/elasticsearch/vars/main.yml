@@ -3,4 +3,4 @@ es_data_path: /data/elasticsearch/data
 es_logs_path: /data/elasticsearch/log
 es_config_source_path: elasticsearch.yml.j2
 es_config_dest_path: /etc/elasticsearch/elasticsearch.yml
-es_cluster_name: elc-sre-demo
+es_cluster_name: cluster-name
