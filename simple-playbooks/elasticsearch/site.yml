@@ -10,18 +10,15 @@
     es_config_dest_path: /etc/elasticsearch/elasticsearch.yml
     es_cluster_name: demo
   tasks:
-    - name: install default-jre
+    - name: install java
       apt:
         force_apt_get: 'yes'
         update_cache: 'yes'
-        name: default-jre
+        name: '{{ items }}'
         state: present
-    - name: install default-jre
-      apt:
-        force_apt_get: 'yes'
-        update_cache: 'yes'
-        name: default-jdk
-        state: present
+      with_items:
+        - default-jre
+        - default-jdk
     - name: add es apt-key
       apt_key:
         state: present
@@ -63,4 +60,4 @@
         daemon_reload: 'yes'
         state: started
         name: elasticsearch.service
-        enabled: yes
+        enabled: 'yes'
