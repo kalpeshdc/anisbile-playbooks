@@ -1,2 +1,5 @@
 ---
-# tasks file for kibana
+- name: echo module
+  debug:
+    msg: 'Checking variable value {{ es_version }}'
+    # var: es_version

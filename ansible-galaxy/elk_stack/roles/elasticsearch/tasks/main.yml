@@ -1,2 +1,28 @@
 ---
-# tasks file for elasticsearch
+- name: install elasticsearch service
+  apt:
+    force_apt_get: 'yes'
+    update_cache: 'yes'
+    name: elasticsearch
+    state: present
+- name: copy elasticsearch configuration file
+  template:
+    dest: '{{ es_config_dest_path }}'
+    src: '{{ es_config_source_path }}'
+    force: 'yes'
+    backup: 'yes'
+- name: create es data dir and chown to elasticsearch user
+  file:
+    path: '{{ item }}'
+    recurse: 'yes'
+    state: directory
+    owner: elasticsearch
+  with_items:
+    - '{{ es_data_path }}'
+    - '{{ es_logs_path }}'
+- name: enable and start elasticsearch service
+  systemd:
+    daemon_reload: 'yes'
+    state: started
+    name: elasticsearch.service
+    enabled: 'yes'
